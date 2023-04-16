@@ -1,5 +1,5 @@
 {
-    "name": "brokenice/laravel-mysql-partition",
+    "name": "vkoori/laravel-mysql-partition",
     "description": "MySQL Partition extension for Laravel.",
     "scripts": {
         "test": "phpunit -c phpunit.xml.dist",
