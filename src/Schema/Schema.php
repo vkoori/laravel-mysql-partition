@@ -49,7 +49,7 @@ class Schema extends IlluminateSchema
             "SELECT `PARTITION_NAME`, `SUBPARTITION_NAME`, `PARTITION_ORDINAL_POSITION`, `TABLE_ROWS`, `PARTITION_METHOD` FROM `information_schema`.`PARTITIONS`"
             . " WHERE `TABLE_SCHEMA` = '" . $db
             . "' AND `TABLE_NAME` = '" . $table . "'"
-        ));
+        )->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
@@ -128,7 +128,7 @@ class Schema extends IlluminateSchema
         $query .= "PARTITION `nov` VALUES LESS THAN (12),";
         $query .= "PARTITION `dec` VALUES LESS THAN (13)";
         $query .= ")";
-        DB::unprepared(DB::raw($query));
+        DB::unprepared(DB::raw($query)->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
@@ -170,7 +170,7 @@ class Schema extends IlluminateSchema
         } else {
             $query .= ")";
         }
-        DB::unprepared(DB::raw($query));
+        DB::unprepared(DB::raw($query)->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
@@ -193,7 +193,7 @@ class Schema extends IlluminateSchema
             $query .= ", PARTITION future VALUES LESS THAN (MAXVALUE)";
         }
         $query = trim(trim($query),',') . ')';
-        DB::unprepared(DB::raw($query));
+        DB::unprepared(DB::raw($query)->getValue(DB::connection()->getQueryGrammar()));
 
     }
 
@@ -234,7 +234,7 @@ class Schema extends IlluminateSchema
         $query = "ALTER TABLE {$appendSchema}{$table} PARTITION BY LIST({$column}) (";
         $query .= self::implodePartitions($partitions);
         $query .= ')';
-        DB::unprepared(DB::raw($query));
+        DB::unprepared(DB::raw($query)->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
@@ -252,7 +252,7 @@ class Schema extends IlluminateSchema
         self::assertSupport();
         $query = "ALTER TABLE {$appendSchema}{$table} PARTITION BY HASH({$hashColumn}) ";
         $query .= "PARTITIONS {$partitionsNumber};";
-        DB::unprepared(DB::raw($query));
+        DB::unprepared(DB::raw($query)->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
@@ -269,7 +269,7 @@ class Schema extends IlluminateSchema
             self::assertSupport();
             $query = "ALTER TABLE {$appendSchema}{$table} PARTITION BY KEY() ";
             $query .= "PARTITIONS {$partitionsNumber};";
-            DB::unprepared(DB::raw($query));
+            DB::unprepared(DB::raw($query)->getValue(DB::connection()->getQueryGrammar()));
         }
 
     /**
@@ -335,7 +335,7 @@ class Schema extends IlluminateSchema
      */
     public static function optimizePartitions($table, $partitions)
     {
-        return DB::select(DB::raw("ALTER TABLE {$table} OPTIMIZE PARTITION " . implode(', ', $partitions)));
+        return DB::select(DB::raw("ALTER TABLE {$table} OPTIMIZE PARTITION " . implode(', ', $partitions))->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
@@ -346,7 +346,7 @@ class Schema extends IlluminateSchema
      */
     public static function analyzePartitions($table, $partitions)
     {
-        return DB::select(DB::raw("ALTER TABLE {$table} ANALYZE PARTITION " . implode(', ', $partitions)));
+        return DB::select(DB::raw("ALTER TABLE {$table} ANALYZE PARTITION " . implode(', ', $partitions))->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
@@ -359,7 +359,7 @@ class Schema extends IlluminateSchema
      */
     public static function repairPartitions($table, $partitions)
     {
-        return DB::select(DB::raw("ALTER TABLE {$table} REPAIR PARTITION " . implode(', ', $partitions)));
+        return DB::select(DB::raw("ALTER TABLE {$table} REPAIR PARTITION " . implode(', ', $partitions))->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
@@ -370,7 +370,7 @@ class Schema extends IlluminateSchema
      */
     public static function checkPartitions($table, $partitions)
     {
-        return DB::select(DB::raw("ALTER TABLE {$table} CHECK PARTITION " . implode(', ', $partitions)));
+        return DB::select(DB::raw("ALTER TABLE {$table} CHECK PARTITION " . implode(', ', $partitions))->getValue(DB::connection()->getQueryGrammar()));
     }
 
     /**
